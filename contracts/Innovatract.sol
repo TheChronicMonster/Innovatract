@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.1;
 
-contract INNOVATRACT{
+contract Innovatract{
     
     struct  User{
         uint StakeAmount;

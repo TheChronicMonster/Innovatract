@@ -1,9 +1,11 @@
-const { default: Web3Client } = require("@maticnetwork/maticjs/dist/ts/common/Web3Client");
+// const { default: Web3Client } = require("@maticnetwork/maticjs/dist/ts/common/Web3Client");
+//const Web3 = require("Web3");
+// const Matic = require("@maticnetwork/maticjs").default;
 
 App= {
     web3Provider: null,
     contracts: {},
-    account: '0x0',
+    account: "0x0",
 
     init: function() {
         return App.initWeb3();
@@ -14,7 +16,7 @@ App= {
             App.web3Provider = web3.currentProvider;
             web3 = new Web3Client(web3.currentProvider);
         } else {
-            App.web3Provider = new Web3Client.providers.HttpProvider('http://localhost:7545');
+            App.web3Provider = new Web3Client.providers.HttpProvider("http://localhost:7545");
             web3 = new Web3Client(App.web3Provider);
         }
         return App.initContract();
@@ -52,7 +54,7 @@ App= {
                 var userDetails = $("#userDetails");
                 userDetails.empty();
 
-                for (var i = 1; i <= createUser; i++) {
+                for (i = 1; i <= createUser; i++) {
                     innovatractInstance.users(i).then(function(user) {
                         var id = user;
                         var contractName = user.GoalName;
@@ -73,8 +75,23 @@ App= {
         }
 };
 
+// $(function() {
+//     $(window).load(function() {
+//         App.init();
+//     });
+// });
+
 $(function() {
-    $(window).load(function() {
-        App.init();
-    });
-});
+    setTimeout(function() {
+      $("body").addClass("hidden")
+    }, 100);
+    setTimeout(function() {
+      $(".preloader").addClass("end")
+    }, 1800);
+    setTimeout(function() {
+      $(".global-overlay").addClass("show")
+    }, 1900);
+    setTimeout(function() {
+      $("body").removeClass("hidden")
+    }, 2300);
+  });

@@ -37,9 +37,18 @@ contract Innovatract{
         user.EndDate = _EndDate;
         UserId++;
         user.AmountStake[msg.sender] = user.StakeAmount;
-       
-         
         
-        
+    }
+     function deposit() external payable {
+    }
+    
+    function balance() external view returns(uint){
+        return address(this).balance;
+    }
+    
+    function sendEther(address payable recipient, uint StakeAmount) external {
+    
+        //convert StakeAmount to ether from wei
+        recipient.transfer(StakeAmount * 1e18);
     }
 }

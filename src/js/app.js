@@ -1,8 +1,4 @@
-// const { default: Web3Client } = require("@maticnetwork/maticjs/dist/ts/common/Web3Client");
-//const Web3 = require("Web3");
-// const Matic = require("@maticnetwork/maticjs").default;
-
-App= {
+App = {
     web3Provider: null,
     contracts: {},
     account: "0x0",
@@ -16,8 +12,8 @@ App= {
             App.web3Provider = web3.currentProvider;
             web3 = new Web3Client(web3.currentProvider);
         } else {
-            App.web3Provider = new Web3Client.providers.HttpProvider("http://localhost:7545");
-            web3 = new Web3Client(App.web3Provider);
+            App.web3Provider = new Web3.providers.HttpProvider("http://localhost:7545");
+            web3 = new Web3(App.web3Provider);
         }
         return App.initContract();
         },
@@ -47,7 +43,7 @@ App= {
                 }
             });
 
-            App.contracts.Election.deployed().then(function(instance) {
+            App.contracts.Innovatract.deployed().then(function(instance) {
                 innovatractInstance = instance;
                 return innovatractInstance.createUser();
             }).then(function(createUser) {
@@ -56,17 +52,24 @@ App= {
 
                 for (i = 1; i <= createUser; i++) {
                     innovatractInstance.users(i).then(function(user) {
-                        var id = user;
-                        var contractName = user.GoalName;
-                        var stakeAmount = user.StakeAmount;
-                        var endDate = user.EndDate;
+                        var id = user[0];
+                        var contractName = user[1];
+                        var stakeAmount = user[2];
+                        var endDate = user[3];
+                        // var contractName = user.GoalName;
+                        // var stakeAmount = user.StakeAmount;
+                        // var endDate = user.EndDate;
 
                         // Render information
                         var InnovatractContractTemplate = "<tr><th>" + id + "</th><td>" + contractName + "</td><td>" + stakeAmount + "</td><td>" + endDate + "</td></tr>"
                         userDetails.append(InnovatractContractTemplate);
                     });
                 }
-
+                return innovatractInstance.users(App.account);
+            }).then(function(hasSubmitted) {
+                if(hasSubmitted) {
+                    $('form').hide();
+                }
                 loader.hide();
                 content.show();
             }).catch(function(error) {

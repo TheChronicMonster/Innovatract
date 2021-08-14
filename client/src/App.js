@@ -5,11 +5,12 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import FormGroup from "react-bootstrap/FormGroup";
 import FormControl from "react-bootstrap/FormControl";
-import HelpBlock from "react-bootstrap/lib/HelpBlock";
-import Grid from "react-bootstrap/lib/Grid";
+import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
-import Panel from "react-bootstrap/lib/Panel";
-
+import Card from "react-bootstrap/Card";
+import BootstrapTable from 'react-bootstrap-table/lib/BootstrapTable';
+import TableHeaderColumn from 'react-bootstrap-table/lib/TableHeaderColumn';
+import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 
 import "./App.css";
 
@@ -26,11 +27,12 @@ class App extends Component {
       contractData: undefined,
       contractDeadline: undefined,
       etherscanLink: "https://rinkeby.etherscan.io",
+      contracts: [],
       account: null,
       web3: null
     }
 
-    this.handleIssueBounty = this.handleIssueBounty.bind(this)
+    this.handleIssueContract = this.handleIssueContract.bind(this)
     this.handleChange = this.handleChange.bind(this)
   }
 
@@ -82,7 +84,7 @@ class App extends Component {
   }
 
   // Handle form submit
-  async handleContractInitialization(event)
+  async handleIssueContract(event)
     {
      if (typeof this.state.innovatractInstance !== 'undefined') {
        event.preventDefault();
@@ -104,6 +106,20 @@ class App extends Component {
       }
     }
 
+    // Event listener
+
+    addEventListener(component) {
+    
+      this.state.innovatractInstance.events.ContractIssued({fromBlock: 0, toBlock: "latest"})
+      .on("data", function(event){
+        console.log(event);
+        var newContractsArray = component.state.contracts.setLastTransactionDetails()
+        newContractsArray.push(event.returnValues)
+        component.setState({ contracts: newContractsArray })
+      })
+      .on('error', console.error);
+    }
+
   render() {
     if (!this.state.web3) {
       return <div>Loading Web3, accounts, and contract...</div>;
@@ -112,14 +128,14 @@ class App extends Component {
       <div className="App">
         <h1>Innovatract</h1>
         <h2>A single party contract to achieve rapid personal innovation</h2>
-        <Grid>
+        <Container>
           <Row>
             <a href={this.state.etherscanLink} target="_blank">Transaction Details</a>
           </Row>
           <Row>
-            <Panel>
-              <Panel.Heading>Initiate a Contract</Panel.Heading>
-              <Form onSubmit={this.handleContractInitialization}>
+            <Card>
+              <Card.Title>Initiate a Contract</Card.Title>
+              <Form onSubmit={this.handleIssueContract}>
                 <FormGroup
                   controlId="fromCreateContract"
                 >
@@ -130,7 +146,7 @@ class App extends Component {
                     placeholder="Enter the name of your Goal"
                     onChange={this.handleChange}
                   />
-                  <HelpBlock>Enter goal information</HelpBlock><br/>
+                  <Form.Text>Enter goal information</Form.Text><br/>
 
                   <FormControl
                     type="text"
@@ -139,7 +155,7 @@ class App extends Component {
                     placeholder="Enter the contract deadline"
                     onChange={this.handleChange}
                   />
-                  <HelpBlock>Enter contract deadline in seconds since epoch</HelpBlock><br/>
+                  <Form.Text>Enter contract deadline in seconds since epoch</Form.Text><br/>
 
                   <FormControl
                     type="text"
@@ -148,14 +164,26 @@ class App extends Component {
                     placeholder="Enter your gwei stake amount"
                     onChange={this.handleChange}
                   />
-                  <HelpBlock>Enter contract stake amount</HelpBlock><br/>
+                  <Form.Text>Enter contract stake amount</Form.Text><br/>
                   <p>By pressing the button, you are entering into an irrevocable and binding contract with yourself.</p>
                   <Button type="submit">Initiate Contract</Button>
                 </FormGroup>
               </Form>
-            </Panel>
+            </Card>
           </Row>
-        </Grid>
+          <Row>
+            <Card>
+              <Card.Text>Issued Contracts</Card.Text>
+              <BootstrapTable data={this.state.contracts} striped hover>
+                <TableHeaderColumn isKey dataField="contract_id">ID</TableHeaderColumn>
+                <TableHeaderColumn dataField="recipient">Recipient</TableHeaderColumn>
+                <TableHeaderColumn dataField="goal">Goal</TableHeaderColumn>
+                <TableHeaderColumn dataField="amount">Amount</TableHeaderColumn>
+                <TableHeaderColumn dataField="date">End Date</TableHeaderColumn>
+              </BootstrapTable>
+            </Card>
+          </Row>
+        </Container>
       </div>
     );
   }

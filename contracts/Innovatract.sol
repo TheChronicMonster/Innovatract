@@ -14,7 +14,6 @@ contract Innovatract{
         uint EndDate;
         mapping (address => uint) AmountStake;
     
-        
         //stake Amount should be constant
     }
     enum GoalAcheived {Inprogress,Acheived,UnAcheived }
@@ -23,7 +22,7 @@ contract Innovatract{
      
      uint public UserId;
    
-    function createUser(
+    function issueContract(
     uint _StakeAmount, string memory _GoalsDiscrption, uint 
     _GoalDuration,uint _StartDate, uint _EndDate,
     uint _CheckInterval, string memory _GoalName) public {
@@ -38,6 +37,10 @@ contract Innovatract{
         UserId++;
         user.AmountStake[msg.sender] = user.StakeAmount;
         
+        contracts.push(Contract(msg.sender, _EndDate, _GoalName, _StakeAmount, GoalAcheived.Inprogress, msg.value));
+        emit ContractIssued(contracts.length - 1,msg.sender, msg.value, _GoalName);
+        return (contracts.length - 1);
+        
     }
      function deposit() external payable {
     }
@@ -51,4 +54,9 @@ contract Innovatract{
         //convert StakeAmount to ether from wei
         recipient.transfer(StakeAmount * 1e18);
     }
+
+    /* Events */
+
+    event ContractIssued(uint contract_id, address recipient, string goal, uint amount, uint date);
+
 }

@@ -113,7 +113,7 @@ class App extends Component {
       case "contractEndDate":
         this.setState({"contractEndDate": event.target.value})
         break;
-      case "stakeAmount":
+      case "contractStakeAmount":
         this.setState({"contractStakeAmount": event.target.value})
         break;
       default:
@@ -155,7 +155,7 @@ class App extends Component {
         <h2>A single party contract to achieve rapid personal innovation</h2>
         <Container>
           <Row>
-            <a href={this.state.etherscanLink} target="_blank">Transaction Details</a>
+            <a href={this.state.etherscanLink} target="_blank" rel="noopener noreferrer">Transaction Details</a>
           </Row>
           <Row>
             <Card>
@@ -166,9 +166,9 @@ class App extends Component {
                 >
                   <FormControl
                     componentclass="textarea"
-                    name="goalName"
+                    name="contractData"
                     value={this.state.contractData}
-                    placeholder="Enter the name of your Goal"
+                    placeholder="Enter the details of your Goal"
                     onChange={this.handleChange}
                   />
                   <Form.Text>Enter goal information</Form.Text><br/>
@@ -184,12 +184,12 @@ class App extends Component {
 
                   <FormControl
                     type="text"
-                    name="stakeAmount"
-                    value={this.state.stakeAmount}
+                    name="contractStakeAmount"
+                    value={this.state.contractStakeAmount}
                     placeholder="Enter your gwei stake amount"
                     onChange={this.handleChange}
                   />
-                  <Form.Text>Enter contract stake amount</Form.Text><br/>
+                  <Form.Text>Enter contract stake amount in gwei</Form.Text><br/>
                   <p>By pressing the button, you are entering into an irrevocable and binding contract with yourself.</p>
                   <Button type="submit">Initiate Contract</Button>
                 </FormGroup>
@@ -202,9 +202,7 @@ class App extends Component {
               <BootstrapTable data={this.state.contracts} striped hover>
                 <TableHeaderColumn isKey dataField="contract_id">ID</TableHeaderColumn>
                 <TableHeaderColumn dataField="recipient">Recipient</TableHeaderColumn>
-                <TableHeaderColumn dataField="goal">Goal</TableHeaderColumn>
-                <TableHeaderColumn dataField="stakeAmount">Amount</TableHeaderColumn>
-                <TableHeaderColumn dataField="endDate">End Date</TableHeaderColumn>
+                <TableHeaderColumn dataField="contractStakeAmount">Amount</TableHeaderColumn>
                 <TableHeaderColumn dataField="ipfsData">Goal Information</TableHeaderColumn>
                 <TableHeaderColumn dataField="contractData">Goal Information</TableHeaderColumn>
               </BootstrapTable>

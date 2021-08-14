@@ -27,13 +27,14 @@ contract Innovatract{
     struct  Contract {
         address payable recipient;
         uint stakeAmount;
-        uint goalDuration;
-        string goalDescription;
-        string goalName;
+        //uint goalDuration;
+        //string goalDescription;
+        //string goalName;
         string data;
-        uint checkInterval;
-        uint startDate;
+        //uint checkInterval;
+        //uint startDate;
         uint endDate;
+        GoalStatus status;
         //mapping (address => uint) AmountStake;
         
         //stake Amount should be constant
@@ -196,7 +197,7 @@ contract Innovatract{
 
     /* Events */
 
-    event ContractIssued(uint contract_id, address recipient, string goal, uint amount, uint date);
+    event ContractIssued(uint contract_id, address recipient, uint amount, uint data);
     event ContractFulfilled(uint contract_id, address fulfiller, uint fulfillment_id, string data);
     event FulfillmentAccepted(uint contract_id, address recipient, address fulfiller, uint indexed fulfillment_id, uint stakeAmount);
     event ContractUnachieved(uint indexed contract_id);

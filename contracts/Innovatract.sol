@@ -26,15 +26,15 @@ contract Innovatract{
     // Changing User to Contract //
     struct  Contract {
         address payable recipient;
+        string data;
         uint stakeAmount;
+        uint endDate;
+        GoalStatus status;
         //uint goalDuration;
         //string goalDescription;
         //string goalName;
-        string data;
         //uint checkInterval;
         //uint startDate;
-        uint endDate;
-        GoalStatus status;
         //mapping (address => uint) AmountStake;
         
         //stake Amount should be constant
@@ -50,19 +50,19 @@ contract Innovatract{
      * @dev Constructor
     */
 
-    constructor() public{}
+    constructor() {}
      
      // uint public UserId; // scheduled to delete
      // Removed public in issueContract function (above external) //
     function issueContract(
         string calldata _data,
         uint _stakeAmount, 
-        string memory _goalDescription, 
-        uint _goalDuration,
-        uint _startDate, 
-        uint64 _endDate,
-        uint _checkInterval,
-        string memory _goalName
+        uint64 _endDate
+        //string memory _goalDescription, 
+        //uint _goalDuration,
+        //uint _startDate, 
+        //uint _checkInterval,
+        //string memory _goalName
     )  
         external
         payable
@@ -197,7 +197,7 @@ contract Innovatract{
 
     /* Events */
 
-    event ContractIssued(uint contract_id, address recipient, uint amount, uint data);
+    event ContractIssued(uint contract_id, address recipient, uint amount, string data);
     event ContractFulfilled(uint contract_id, address fulfiller, uint fulfillment_id, string data);
     event FulfillmentAccepted(uint contract_id, address recipient, address fulfiller, uint indexed fulfillment_id, uint stakeAmount);
     event ContractUnachieved(uint indexed contract_id);

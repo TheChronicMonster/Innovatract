@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import InnovatractContract from "./contracts/Innovatract.json";
 import getWeb3 from "./getWeb3";
+import { setJSON, getJSON } from './utils/IPFS.js'
+
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import FormGroup from "react-bootstrap/FormGroup";
@@ -15,6 +17,7 @@ import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import "./App.css";
 
 const etherscanBaseUrl = "https://rinkeby.etherscan.io"
+const ipfsBaseUrl = "https://ipfs.infura.io/ipfs";
 
 class App extends Component {
   constructor(props) {
@@ -69,6 +72,9 @@ class App extends Component {
   handleChange(event)
   {
     switch(event.target.name) {
+      case "contractData":
+        this.setState({"contractData": event.target.value})
+        break;
       case "goalName":
         this.setState({"goalName": event.target.value})
         break;
@@ -88,7 +94,8 @@ class App extends Component {
     {
      if (typeof this.state.innovatractInstance !== 'undefined') {
        event.preventDefault();
-    let result = await this.state.innovatractInstance.methods.issueContract(this.state.contractData,this.state.contractDeadline).send({from: this.state.account, value: this.state.web3.utils.toWei(this.state.stakeAmount, 'ether')})
+       const ipfsHash = await setJSON({ contractData: this.state.contractData });
+    let result = await this.state.innovatractInstance.methods.issueContract(ipfsHash,this.state.goalName).send({from: this.state.account, value: this.state.web3.utils.toWei(this.state.stakeAmount, 'ether')})
        this.setLastTransactionDetails(result)
      } 
     }
@@ -111,9 +118,27 @@ class App extends Component {
     addEventListener(component) {
     
       this.state.innovatractInstance.events.ContractIssued({fromBlock: 0, toBlock: "latest"})
-      .on("data", function(event){
-        console.log(event);
-        var newContractsArray = component.state.contracts.setLastTransactionDetails()
+      .on("data", async function(event){
+        var ipfsJson = {}
+        try{
+          ipfsJson = await getJSON(event.returnValues.data);
+        }
+        catch(e)
+        {
+
+        }
+
+        if(ipfsJson.contractData !== undefined)
+        {
+          event.returnValues["contractData"] = ipfsJson.contractData;
+          event.returnValues["ipfsData"] = ipfsBaseUrl+"/"+event.returnValues.data;
+        }
+        else {
+          event.returnValues["ipfsData"] = "none";
+          event.returnValues["contractData"] = event.returnValues["data"];
+        }
+
+        var newContractsArray = component.state.contracts.slice()
         newContractsArray.push(event.returnValues)
         component.setState({ contracts: newContractsArray })
       })
@@ -180,6 +205,8 @@ class App extends Component {
                 <TableHeaderColumn dataField="goal">Goal</TableHeaderColumn>
                 <TableHeaderColumn dataField="amount">Amount</TableHeaderColumn>
                 <TableHeaderColumn dataField="date">End Date</TableHeaderColumn>
+                <TableHeaderColumn dataField="ipfsData">Goal Information</TableHeaderColumn>
+                <TableHeaderColumn dataField="contractData">Goal Information</TableHeaderColumn>
               </BootstrapTable>
             </Card>
           </Row>

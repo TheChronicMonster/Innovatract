@@ -28,7 +28,7 @@ class App extends Component {
       innovatractInstance: undefined,
       stakeAmount: undefined,
       contractData: undefined,
-      contractDeadline: undefined,
+      contractEndDate: undefined,
       etherscanLink: "https://rinkeby.etherscan.io",
       contracts: [],
       account: null,
@@ -64,9 +64,41 @@ class App extends Component {
       alert(
         `Failed to load web3, accounts, or contract. Check console for details.`,
       );
-      console.error(error);
+      console.log(error);
     }
   };
+
+      // Event listener
+
+      addEventListener(component) {
+    
+        this.state.innovatractInstance.events.ContractIssued({fromBlock: 0, toBlock: "latest"})
+        .on("data", async function(event){
+          var ipfsJson = {}
+          try{
+            ipfsJson = await getJSON(event.returnValues.data);
+          }
+          catch(e)
+          {
+  
+          }
+  
+          if(ipfsJson.contractData !== undefined)
+          {
+            event.returnValues["contractData"] = ipfsJson.contractData;
+            event.returnValues["ipfsData"] = ipfsBaseUrl+"/"+event.returnValues.data;
+          }
+          else {
+            event.returnValues["ipfsData"] = "none";
+            event.returnValues["contractData"] = event.returnValues["data"];
+          }
+  
+          var newContractsArray = component.state.contracts.slice()
+          newContractsArray.push(event.returnValues)
+          component.setState({ contracts: newContractsArray })
+        })
+        .on('error', console.error);
+      }
 
   // Handle form data change
   handleChange(event)
@@ -75,14 +107,14 @@ class App extends Component {
       case "contractData":
         this.setState({"contractData": event.target.value})
         break;
-      case "goalName":
-        this.setState({"goalName": event.target.value})
-        break;
-      case "contractDeadline":
-        this.setState({"contractDeadline": event.target.value})
+      // case "goalName":
+      //   this.setState({"goalName": event.target.value})
+      //   break;
+      case "contractEndDate":
+        this.setState({"contractEndDate": event.target.value})
         break;
       case "stakeAmount":
-        this.setState({"stakeAmount": event.target.value})
+        this.setState({"contractStakeAmount": event.target.value})
         break;
       default:
         break;
@@ -95,7 +127,7 @@ class App extends Component {
      if (typeof this.state.innovatractInstance !== 'undefined') {
        event.preventDefault();
        const ipfsHash = await setJSON({ contractData: this.state.contractData });
-    let result = await this.state.innovatractInstance.methods.issueContract(ipfsHash,this.state.goalName).send({from: this.state.account, value: this.state.web3.utils.toWei(this.state.stakeAmount, 'ether')})
+       let result = await this.state.innovatractInstance.methods.issueContract(ipfsHash,this.state.contractEndDate).send({from: this.state.account, value: this.state.web3.utils.toWei(this.state.contractStakeAmount, 'ether')})
        this.setLastTransactionDetails(result)
      } 
     }
@@ -111,38 +143,6 @@ class App extends Component {
       {
         this.setState({etherscanLink: etherscanBaseUrl})
       }
-    }
-
-    // Event listener
-
-    addEventListener(component) {
-    
-      this.state.innovatractInstance.events.ContractIssued({fromBlock: 0, toBlock: "latest"})
-      .on("data", async function(event){
-        var ipfsJson = {}
-        try{
-          ipfsJson = await getJSON(event.returnValues.data);
-        }
-        catch(e)
-        {
-
-        }
-
-        if(ipfsJson.contractData !== undefined)
-        {
-          event.returnValues["contractData"] = ipfsJson.contractData;
-          event.returnValues["ipfsData"] = ipfsBaseUrl+"/"+event.returnValues.data;
-        }
-        else {
-          event.returnValues["ipfsData"] = "none";
-          event.returnValues["contractData"] = event.returnValues["data"];
-        }
-
-        var newContractsArray = component.state.contracts.slice()
-        newContractsArray.push(event.returnValues)
-        component.setState({ contracts: newContractsArray })
-      })
-      .on('error', console.error);
     }
 
   render() {
@@ -165,7 +165,7 @@ class App extends Component {
                   controlId="fromCreateContract"
                 >
                   <FormControl
-                    componentClass="textarea"
+                    componentclass="textarea"
                     name="goalName"
                     value={this.state.contractData}
                     placeholder="Enter the name of your Goal"
@@ -175,12 +175,12 @@ class App extends Component {
 
                   <FormControl
                     type="text"
-                    name="contractDeadline"
-                    value={this.state.contractDeadline}
-                    placeholder="Enter the contract deadline"
+                    name="contractEndDate"
+                    value={this.state.contractEndDate}
+                    placeholder="Enter the contract end date"
                     onChange={this.handleChange}
                   />
-                  <Form.Text>Enter contract deadline in seconds since epoch</Form.Text><br/>
+                  <Form.Text>Enter contract end date in seconds since epoch</Form.Text><br/>
 
                   <FormControl
                     type="text"
@@ -203,8 +203,8 @@ class App extends Component {
                 <TableHeaderColumn isKey dataField="contract_id">ID</TableHeaderColumn>
                 <TableHeaderColumn dataField="recipient">Recipient</TableHeaderColumn>
                 <TableHeaderColumn dataField="goal">Goal</TableHeaderColumn>
-                <TableHeaderColumn dataField="amount">Amount</TableHeaderColumn>
-                <TableHeaderColumn dataField="date">End Date</TableHeaderColumn>
+                <TableHeaderColumn dataField="stakeAmount">Amount</TableHeaderColumn>
+                <TableHeaderColumn dataField="endDate">End Date</TableHeaderColumn>
                 <TableHeaderColumn dataField="ipfsData">Goal Information</TableHeaderColumn>
                 <TableHeaderColumn dataField="contractData">Goal Information</TableHeaderColumn>
               </BootstrapTable>

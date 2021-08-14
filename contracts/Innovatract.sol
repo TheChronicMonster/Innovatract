@@ -3,60 +3,202 @@
 pragma solidity ^0.8.1;
 
 contract Innovatract{
+
+    /*
+    * Enums
+    */
+    // changing GoalAceived to GoalStatus ; Change Inprogress to Active //
+    enum GoalStatus { ACTIVE, ACHIEVED, UNACHIEVED }
     
-    struct  User{
-        uint StakeAmount;
-        uint GoalDuration;
-        string GoalDiscription;
-        string GoalName;
-        uint CheckInterval;
-        uint StartDate;
-        uint EndDate;
-        mapping (address => uint) AmountStake;
-    
+    /* 
+    * Storage
+    */
+
+    Contract[] public contracts;
+
+    // mapping(uint => User[]) public users; // going to map to fulfillment
+    mapping(uint=>Fulfillment[]) fulfillments;
+
+    /*
+    * Structs
+    */
+
+    // Changing User to Contract //
+    struct  Contract {
+        address payable recipient;
+        uint stakeAmount;
+        uint goalDuration;
+        string goalDescription;
+        string goalName;
+        string data;
+        uint checkInterval;
+        uint startDate;
+        uint endDate;
+        //mapping (address => uint) AmountStake;
+        
         //stake Amount should be constant
     }
-    enum GoalAcheived {Inprogress,Acheived,UnAcheived }
     
-     mapping(uint => User ) public UserCount;
+    struct Fulfillment {
+        bool achieved;
+        address payable fulfiller;
+        string data;
+    }
      
-     uint public UserId;
-   
+    /*
+     * @dev Constructor
+    */
+
+    constructor() public{}
+     
+     // uint public UserId; // scheduled to delete
+     // Removed public in issueContract function (above external) //
     function issueContract(
-    uint _StakeAmount, string memory _GoalsDiscrption, uint 
-    _GoalDuration,uint _StartDate, uint _EndDate,
-    uint _CheckInterval, string memory _GoalName) public {
-        User storage user = UserCount[UserId];
-        user.StakeAmount = _StakeAmount;
-        user.GoalDuration = _GoalDuration;
-        user.GoalDiscription = _GoalsDiscrption;
-        user.GoalName = _GoalName;
-        user.CheckInterval = _CheckInterval;
-        user.StartDate = _StartDate;
-        user.EndDate = _EndDate;
-        UserId++;
-        user.AmountStake[msg.sender] = user.StakeAmount;
+        string calldata _data,
+        uint _stakeAmount, 
+        string memory _goalDescription, 
+        uint _goalDuration,
+        uint _startDate, 
+        uint64 _endDate,
+        uint _checkInterval,
+        string memory _goalName
+    )  
+        external
+        payable
+        hasValue()
+        validateEndDate(_endDate)
+        returns (uint)
+    {
+        // User storage user = users[UserId];
+        // user.stakeAmount = _stakeAmount;
+        // user.goalDuration = _goalDuration;
+        // user.goalDescription = _goalDescription;
+        // user.goalName = _goalName;
+        // user.checkInterval = _checkInterval;
+        // user.startDate = _startDate;
+        // user.endDate = _endDate;
+        // UserId++;
+        // user.AmountStake[msg.sender] = user.stakeAmount;
         
-        contracts.push(Contract(msg.sender, _EndDate, _GoalName, _StakeAmount, GoalAcheived.Inprogress, msg.value));
-        emit ContractIssued(contracts.length - 1,msg.sender, msg.value, _GoalName);
+        contracts.push(Contract(msg.sender, _endDate, _data, _goalName, GoalStatus.ACTIVE, msg.value));
+        emit ContractIssued(contracts.length - 1,msg.sender, msg.value, _data);
         return (contracts.length - 1);
-        
     }
-     function deposit() external payable {
+
+    /**
+    * fulfilling a contract at endDate 
+    */
+    function fulfillContract(uint _contractId, string memory _data)
+        public
+        contractExists(_contractId)
+        hasStatus(_contractId, GoalStatus.ACTIVE)
+        isAfterEndDate(_contractId)
+    {
+        fulfillments[_contractId].push(Fulfillment(false, msg.sender, _data));
+        emit ContractFulfilled(_contractId, msg.sender, (fulfillments[_contractId].length - 1),_data);
     }
+
+    /**
+    * instructs contract to accept the fulfillment - send funds to fulfiller
+    */
+    function acceptFulfillment(uint _contractId, uint _fulfillmentId)
+        public
+        contractExists(_contractId)
+        fulfillmentExists(_contractId, _fulfillmentId)
+        onlyRecipient(_contractId)
+        hasStatus(_contractId, GoalStatus.ACTIVE)
+        fulfillmentNotYetAchieved(_contractId, _fulfillmentId)
+    {
+        fulfillments[_contractId][_fulfillmentId].accepted = true;
+        contracts[_contractId].status = GoalStatus.ACHIEVED;
+        fulfillments[_contractId][_fulfillmentId].fulfiller.transfer(contracts[_contractId].stakeAmount);
+        emit FulfillmentAccepted(_contractId, contracts[_contractId].recipient, fulfillments[_contractId][_fulfillmentId].fulfiller, _fulfillmentId, contracts[_contractId].stakeAmount);
+    }
+
+    /**
+    * When a goal is unachieved, the money is never transfered. 
+    * To transfer funds, remove active emit and uncomment pair. 
+    * Update Event at bottom 
+    */
+    function unachievedContract(uint _contractId)
+        public
+        contractExists(_contractId)
+        onlyRecipient(_contractId)
+        hasStatus(_contractId, GoalStatus.ACTIVE)
+    {
+        contracts[_contractId].status = GoalStatus.UNACHIEVED;
+        //contracts[_contractId].recipient.transfer(contracts[_contractId].stakeAmount);
+        //emit ContractUnachieved(_contractId, msg.sender, contracts[_contractId].stakeAmount);
+        emit ContractUnachieved(_contractId);
+    }
+
+    /**
+    * Modifiers 
+    */
+
+    modifier hasValue() {
+        require(msg.value > 0);
+        _;
+    }
+
+    modifier contractExists(uint _contractId) {
+        require(_contractId < contracts.length);
+        _;
+    }
+
+    modifier fulfillmentExists(uint _contractId, uint _fulfillmentId) {
+        require(_fulfillmentId < fulfillments[_contractId].length);
+        _;
+    }
+
+    modifier hasStatus(uint _contractId, GoalStatus _desiredStatus) {
+        require(contracts[_contractId].status == _desiredStatus);
+        _;
+    }
+
+    modifier onlyRecipient(uint _contractId) {
+        require(msg.sender == contracts[_contractId].recipient);
+        _;
+    }
+
+    modifier notRecipient(uint _contractId) {
+        require(msg.sender != contracts[_contractId].recipient);
+        _;
+    }
+
+    modifier fulfillmentNotYetAchieved(uint _contractId, uint _fulfillmentId) {
+        require(fulfillments[_contractId][_fulfillmentId].achieved == false);
+        _;
+    }
+
+    modifier validateEndDate(uint _newEndDate) {
+        require(_newEndDate > now);
+        _;
+    }
+
+    modifier isAfterEndDate(uint _contractId) {
+        require(now < contracts[_contractId].endDate);
+        _;
+    }
+
+    // function deposit() external payable {
+    // }
     
-    function balance() external view returns(uint){
-        return address(this).balance;
-    }
+    // function balance() external view returns(uint){
+    //     return address(this).balance;
+    // }
     
-    function sendEther(address payable recipient, uint StakeAmount) external {
+    // function sendEther(address payable recipient, uint stakeAmount) external {
     
-        //convert StakeAmount to ether from wei
-        recipient.transfer(StakeAmount * 1e18);
-    }
+    //     //convert stakeAmount to ether from wei
+    //     recipient.transfer(stakeAmount * 1e18);
+    // }
 
     /* Events */
 
     event ContractIssued(uint contract_id, address recipient, string goal, uint amount, uint date);
-
+    event ContractFulfilled(uint contract_id, address fulfiller, uint fulfillment_id, string data);
+    event FulfillmentAccepted(uint contract_id, address recipient, address fulfiller, uint indexed fulfillment_id, uint stakeAmount);
+    event ContractUnachieved(uint indexed contract_id);
+    // event ContractUnachieved(uint indexed contract_id, address indexed recipient, uint stakeAmount); // If uncommented, comment other event. will send funds //
 }

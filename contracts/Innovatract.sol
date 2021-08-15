@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0
 
-pragma solidity ^0.8.1;
+pragma solidity ^0.8.2;
 
 contract Innovatract{
 
@@ -26,13 +26,15 @@ contract Innovatract{
     // Changing User to Contract //
     struct  Contract {
         address payable recipient;
-        string data;
-        uint stakeAmount;
+        //address originator;
         uint endDate;
+        string data;
         GoalStatus status;
+        uint stakeAmount;
+        
+        //string goalName;
         //uint goalDuration;
         //string goalDescription;
-        //string goalName;
         //uint checkInterval;
         //uint startDate;
         //mapping (address => uint) AmountStake;
@@ -46,6 +48,9 @@ contract Innovatract{
         string data;
     }
      
+    //  address public escrowWallet;
+    //  mapping (address => Contract) public contracts;
+    
     /*
      * @dev Constructor
     */
@@ -56,13 +61,16 @@ contract Innovatract{
      // Removed public in issueContract function (above external) //
     function issueContract(
         string calldata _data,
-        uint _stakeAmount, 
         uint64 _endDate
+
+        // address contract,
+        // uint _stakeAmount, 
+        // string memory _goalName
         //string memory _goalDescription, 
         //uint _goalDuration,
         //uint _startDate, 
         //uint _checkInterval,
-        //string memory _goalName
+        
     )  
         external
         payable
@@ -81,8 +89,8 @@ contract Innovatract{
         // UserId++;
         // user.AmountStake[msg.sender] = user.stakeAmount;
         
-        contracts.push(Contract(msg.sender, _endDate, _data, _goalName, GoalStatus.ACTIVE, msg.value));
-        emit ContractIssued(contracts.length - 1,msg.sender, msg.value, _data);
+        contracts.push(Contract(msg.sender, _endDate, _data, GoalStatus.ACTIVE, msg.value));
+        emit ContractIssued(contracts.length - 1, msg.sender, msg.value, _data);
         return (contracts.length - 1);
     }
 
@@ -92,6 +100,7 @@ contract Innovatract{
     function fulfillContract(uint _contractId, string memory _data)
         public
         contractExists(_contractId)
+        notRecipient(_contractId)
         hasStatus(_contractId, GoalStatus.ACTIVE)
         isAfterEndDate(_contractId)
     {
@@ -110,10 +119,10 @@ contract Innovatract{
         hasStatus(_contractId, GoalStatus.ACTIVE)
         fulfillmentNotYetAchieved(_contractId, _fulfillmentId)
     {
-        fulfillments[_contractId][_fulfillmentId].accepted = true;
+        fulfillments[_contractId][_fulfillmentId].achieved = true;
         contracts[_contractId].status = GoalStatus.ACHIEVED;
         fulfillments[_contractId][_fulfillmentId].fulfiller.transfer(contracts[_contractId].stakeAmount);
-        emit FulfillmentAccepted(_contractId, contracts[_contractId].recipient, fulfillments[_contractId][_fulfillmentId].fulfiller, _fulfillmentId, contracts[_contractId].stakeAmount);
+        emit FulfillmentAchieved(_contractId, contracts[_contractId].recipient, fulfillments[_contractId][_fulfillmentId].fulfiller, _fulfillmentId, contracts[_contractId].stakeAmount);
     }
 
     /**
@@ -173,12 +182,12 @@ contract Innovatract{
     }
 
     modifier validateEndDate(uint _newEndDate) {
-        require(_newEndDate > now);
+        require(_newEndDate > block.timestamp);
         _;
     }
 
     modifier isAfterEndDate(uint _contractId) {
-        require(now < contracts[_contractId].endDate);
+        require(block.timestamp < contracts[_contractId].endDate);
         _;
     }
 
@@ -199,7 +208,7 @@ contract Innovatract{
 
     event ContractIssued(uint contract_id, address recipient, uint amount, string data);
     event ContractFulfilled(uint contract_id, address fulfiller, uint fulfillment_id, string data);
-    event FulfillmentAccepted(uint contract_id, address recipient, address fulfiller, uint indexed fulfillment_id, uint stakeAmount);
+    event FulfillmentAchieved(uint contract_id, address recipient, address fulfiller, uint indexed fulfillment_id, uint stakeAmount);
     event ContractUnachieved(uint indexed contract_id);
     // event ContractUnachieved(uint indexed contract_id, address indexed recipient, uint stakeAmount); // If uncommented, comment other event. will send funds //
 }

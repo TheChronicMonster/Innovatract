@@ -21,8 +21,7 @@ const ipfsBaseUrl = "https://ipfs.infura.io/ipfs";
 
 class App extends Component {
   constructor(props) {
-    super(props)
-
+    super(props);
     this.state = {
       storageValue: 0,
       innovatractInstance: undefined,
@@ -33,8 +32,7 @@ class App extends Component {
       contracts: [],
       account: null,
       web3: null
-    }
-
+    };
     this.handleIssueContract = this.handleIssueContract.bind(this)
     this.handleChange = this.handleChange.bind(this)
   }
@@ -69,6 +67,7 @@ class App extends Component {
   };
 
       // Event listener
+      // ContractIssued lives here
 
       addEventListener(component) {
     
@@ -122,6 +121,7 @@ class App extends Component {
   }
 
   // Handle form submit
+  // IssueContract is not a function
   async handleIssueContract(event)
     {
      if (typeof this.state.innovatractInstance !== 'undefined') {
@@ -167,7 +167,7 @@ class App extends Component {
                   <FormControl
                     componentclass="textarea"
                     name="contractData"
-                    value={this.state.contractData}
+                    value={this.state.contractData || ''}
                     placeholder="Enter the details of your Goal"
                     onChange={this.handleChange}
                   />
@@ -176,7 +176,7 @@ class App extends Component {
                   <FormControl
                     type="text"
                     name="contractEndDate"
-                    value={this.state.contractEndDate}
+                    value={this.state.contractEndDate || ''}
                     placeholder="Enter the contract end date"
                     onChange={this.handleChange}
                   />
@@ -185,7 +185,7 @@ class App extends Component {
                   <FormControl
                     type="text"
                     name="contractStakeAmount"
-                    value={this.state.contractStakeAmount}
+                    value={this.state.contractStakeAmount || ''}
                     placeholder="Enter your gwei stake amount"
                     onChange={this.handleChange}
                   />

@@ -16,7 +16,7 @@ import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 
 import "./App.css";
 
-const etherscanBaseUrl = "https://rinkeby.etherscan.io"
+const etherscanBaseUrl = "https://etherscan.io"
 const ipfsBaseUrl = "https://ipfs.infura.io/ipfs";
 
 class App extends Component {
@@ -28,7 +28,7 @@ class App extends Component {
       stakeAmount: undefined,
       contractData: undefined,
       contractEndDate: undefined,
-      etherscanLink: "https://rinkeby.etherscan.io",
+      etherscanLink: "https://etherscan.io",
       contracts: [],
       account: null,
       web3: null

@@ -33,8 +33,8 @@ class App extends Component {
       account: null,
       web3: null
     };
-    this.handleIssueContract = this.handleIssueContract.bind(this)
-    this.handleChange = this.handleChange.bind(this)
+    this.handleIssueContract = this.handleIssueContract.bind(this);
+    this.handleChange = this.handleChange.bind(this);
   }
 
   componentDidMount = async () => {
@@ -56,7 +56,7 @@ class App extends Component {
       // Set web3, accounts, and contract to the state, and then proceed with an
       // example of interacting with the contract's methods.
       this.setState({ innovatractInstance: instance, web3: web3, account: accounts[0] }) 
-      this.addEventListener(this)
+      this.addEventListener.bind(this)
     } catch (error) {
       // Catch any errors for any of the above operations.
       alert(
@@ -71,7 +71,7 @@ class App extends Component {
 
       addEventListener(component) {
     
-        this.state.innovatractInstance.events.ContractIssued({fromBlock: 0, toBlock: "latest"})
+        this.state.innovatractInstance.events.ContractIssued.bind({fromBlock: 0, toBlock: "latest"})
         .on("data", async function(event){
           var ipfsJson = {}
           try{
@@ -127,7 +127,7 @@ class App extends Component {
      if (typeof this.state.innovatractInstance !== 'undefined') {
        event.preventDefault();
        const ipfsHash = await setJSON({ contractData: this.state.contractData });
-       let result = await this.state.innovatractInstance.methods.issueContract(ipfsHash,this.state.contractEndDate).send({from: this.state.account, value: this.state.web3.utils.toWei(this.state.contractStakeAmount, 'ether')})
+       let result = await this.state.innovatractInstance.methods.issueContract.bind(ipfsHash,this.state.contractEndDate).send({from: this.state.account, value: this.state.web3.utils.toWei(this.state.contractStakeAmount, 'ether')})
        this.setLastTransactionDetails(result)
      } 
     }
@@ -160,7 +160,7 @@ class App extends Component {
           <Row>
             <Card>
               <Card.Title>Initiate a Contract</Card.Title>
-              <Form onSubmit={this.handleIssueContract}>
+              <Form onSubmit={() => this.handleIssueContract.bind(this)}>
                 <FormGroup
                   controlId="fromCreateContract"
                 >

@@ -21,7 +21,7 @@ var input = {
     }
 };
 
-console.log(JSON.parse(solc.compile(JSON.stringify(input))));
+module.exports = console.log(JSON.parse(solc.compile(JSON.stringify(input))));
 
 //module.exports = solc.compile(source, 1).contracts[':Innovatract'];
 //console.log(solc.compile(source, 1))

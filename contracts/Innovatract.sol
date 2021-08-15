@@ -89,7 +89,7 @@ contract Innovatract{
         // UserId++;
         // user.AmountStake[msg.sender] = user.stakeAmount;
         
-        contracts.push(Contract(msg.sender, _endDate, _data, GoalStatus.ACTIVE, msg.value));
+        contracts.push(Contract(payable(msg.sender), _endDate, _data, GoalStatus.ACTIVE, msg.value));
         emit ContractIssued(contracts.length - 1, msg.sender, msg.value, _data);
         return (contracts.length - 1);
     }
@@ -104,7 +104,7 @@ contract Innovatract{
         hasStatus(_contractId, GoalStatus.ACTIVE)
         isAfterEndDate(_contractId)
     {
-        fulfillments[_contractId].push(Fulfillment(false, msg.sender, _data));
+        fulfillments[_contractId].push(Fulfillment(false, payable(msg.sender), _data));
         emit ContractFulfilled(_contractId, msg.sender, (fulfillments[_contractId].length - 1),_data);
     }
 

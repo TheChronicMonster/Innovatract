@@ -169,7 +169,7 @@ class App extends Component {
                     name="contractData"
                     value={this.state.contractData || ''}
                     placeholder="Enter the details of your Goal"
-                    onChange={this.handleChange}
+                    onChange={this.handleChange.bind(this)}
                   />
                   <Form.Text>Enter goal information</Form.Text><br/>
 
@@ -178,7 +178,7 @@ class App extends Component {
                     name="contractEndDate"
                     value={this.state.contractEndDate || ''}
                     placeholder="Enter the contract end date"
-                    onChange={this.handleChange}
+                    onChange={this.handleChange.bind(this)}
                   />
                   <Form.Text>Enter contract end date in seconds since epoch</Form.Text><br/>
 
@@ -187,7 +187,7 @@ class App extends Component {
                     name="contractStakeAmount"
                     value={this.state.contractStakeAmount || ''}
                     placeholder="Enter your gwei stake amount"
-                    onChange={this.handleChange}
+                    onChange={this.handleChange.bind(this)}
                   />
                   <Form.Text>Enter contract stake amount in gwei</Form.Text><br/>
                   <p>By pressing the button, you are entering into an irrevocable and binding contract with yourself.</p>
@@ -201,7 +201,7 @@ class App extends Component {
               <Card.Text>Issued Contracts</Card.Text>
               <BootstrapTable data={this.state.contracts} striped hover>
                 <TableHeaderColumn isKey dataField="contract_id">ID</TableHeaderColumn>
-                <TableHeaderColumn dataField="recipient">Recipient</TableHeaderColumn>
+                <TableHeaderColumn dataField="owner">Owner</TableHeaderColumn>
                 <TableHeaderColumn dataField="contractStakeAmount">Amount</TableHeaderColumn>
                 <TableHeaderColumn dataField="ipfsData">Goal Information</TableHeaderColumn>
                 <TableHeaderColumn dataField="contractData">Goal Information</TableHeaderColumn>

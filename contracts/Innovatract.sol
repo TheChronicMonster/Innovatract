@@ -22,10 +22,12 @@ contract Innovatract{
     /*
     * Structs
     */
+    
+    address owner = 0xBd621d439c76a242A8D0038C45aF81DAD6818f98;
 
     // Changing User to Contract //
     struct  Contract {
-        address payable recipient;
+        address owner;
         //address originator;
         uint endDate;
         string data;
@@ -100,7 +102,7 @@ contract Innovatract{
     function fulfillContract(uint _contractId, string memory _data)
         public
         contractExists(_contractId)
-        notRecipient(_contractId)
+        notOwner(_contractId)
         hasStatus(_contractId, GoalStatus.ACTIVE)
         isAfterEndDate(_contractId)
     {
@@ -115,14 +117,14 @@ contract Innovatract{
         public
         contractExists(_contractId)
         fulfillmentExists(_contractId, _fulfillmentId)
-        onlyRecipient(_contractId)
+        onlyOwner(_contractId)
         hasStatus(_contractId, GoalStatus.ACTIVE)
         fulfillmentNotYetAchieved(_contractId, _fulfillmentId)
     {
         fulfillments[_contractId][_fulfillmentId].achieved = true;
         contracts[_contractId].status = GoalStatus.ACHIEVED;
         fulfillments[_contractId][_fulfillmentId].fulfiller.transfer(contracts[_contractId].stakeAmount);
-        emit FulfillmentAchieved(_contractId, contracts[_contractId].recipient, fulfillments[_contractId][_fulfillmentId].fulfiller, _fulfillmentId, contracts[_contractId].stakeAmount);
+        emit FulfillmentAchieved(_contractId, contracts[_contractId].owner, fulfillments[_contractId][_fulfillmentId].fulfiller, _fulfillmentId, contracts[_contractId].stakeAmount);
     }
 
     /**
@@ -133,11 +135,11 @@ contract Innovatract{
     function unachievedContract(uint _contractId)
         public
         contractExists(_contractId)
-        onlyRecipient(_contractId)
+        onlyOwner(_contractId)
         hasStatus(_contractId, GoalStatus.ACTIVE)
     {
         contracts[_contractId].status = GoalStatus.UNACHIEVED;
-        //contracts[_contractId].recipient.transfer(contracts[_contractId].stakeAmount);
+        //contracts[_contractId].owner.transfer(contracts[_contractId].stakeAmount);
         //emit ContractUnachieved(_contractId, msg.sender, contracts[_contractId].stakeAmount);
         emit ContractUnachieved(_contractId);
     }
@@ -166,13 +168,13 @@ contract Innovatract{
         _;
     }
 
-    modifier onlyRecipient(uint _contractId) {
-        require(msg.sender == contracts[_contractId].recipient);
+    modifier onlyOwner(uint _contractId) {
+        require(msg.sender == contracts[_contractId].owner);
         _;
     }
 
-    modifier notRecipient(uint _contractId) {
-        require(msg.sender != contracts[_contractId].recipient);
+    modifier notOwner(uint _contractId) {
+        require(msg.sender != contracts[_contractId].owner);
         _;
     }
 
@@ -198,17 +200,17 @@ contract Innovatract{
     //     return address(this).balance;
     // }
     
-    // function sendEther(address payable recipient, uint stakeAmount) external {
+    // function sendEther(address payable owner, uint stakeAmount) external {
     
     //     //convert stakeAmount to ether from wei
-    //     recipient.transfer(stakeAmount * 1e18);
+    //     owner.transfer(stakeAmount * 1e18);
     // }
 
     /* Events */
 
-    event ContractIssued(uint contract_id, address recipient, uint amount, string data);
+    event ContractIssued(uint contract_id, address owner, uint amount, string data);
     event ContractFulfilled(uint contract_id, address fulfiller, uint fulfillment_id, string data);
-    event FulfillmentAchieved(uint contract_id, address recipient, address fulfiller, uint indexed fulfillment_id, uint stakeAmount);
+    event FulfillmentAchieved(uint contract_id, address owner, address fulfiller, uint indexed fulfillment_id, uint stakeAmount);
     event ContractUnachieved(uint indexed contract_id);
-    // event ContractUnachieved(uint indexed contract_id, address indexed recipient, uint stakeAmount); // If uncommented, comment other event. will send funds //
+    // event ContractUnachieved(uint indexed contract_id, address indexed owner, uint stakeAmount); // If uncommented, comment other event. will send funds //
 }

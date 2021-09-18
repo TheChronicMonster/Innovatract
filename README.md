@@ -4,9 +4,7 @@ A smart contract that enables users to enter binding contracts with themselves
 ### Run Instructions
 
 To use the front-end application, [clone the repository](https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/cloning-a-repository-from-github/cloning-a-repository)
-`cd Innovatract`
-`npm install`
-`cd client && npm run start`
+`./run.sh`
 
 This will open the front-end user interface on `localhost://3000`
 Navigate to `localhost://3000/scr/index.html` to view the DApp.

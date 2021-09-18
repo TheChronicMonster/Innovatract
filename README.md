@@ -33,4 +33,4 @@ The Solidity smart contract operates on the Polygon/Matic Blockchain and was a d
 
 We stand on the shoulders of giants. Guidance and help were sourced from GlobalETH, Fluence Labs, Polygon/matic documentation, and kauri.io. Stack Overflow and countless blogs were also consulted in the making of this DApp. This service exists thanks to the knowledge that countless engineers have shared and published. This is our offering as a way to support and give back to communities that have shared so much.
 
-Created by JP Miller, David Pius, Ilya Kostin, and research performed by Azim Anuar
+Created by [JP Miller](https://github.com/TheChronicMonster), [David Pius](https://github.com/davidpius95), [Ilya Kostin](https://github.com/IlyaKIS1), and research performed by [Azim Anuar]()

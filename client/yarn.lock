@@ -7074,7 +7074,7 @@
   "resolved" "https://registry.npmjs.org/mute-stream/-/mute-stream-0.0.8.tgz"
   "version" "0.0.8"
 
-"nan@^2.11.0", "nan@^2.12.1", "nan@^2.14.0", "nan@^2.2.1":
+"nan@^2.12.1", "nan@^2.14.0", "nan@^2.2.1":
   "integrity" "sha512-INOFj37C7k3AfaNTtX8RhsTw7qRy7eLET14cROi9+5HAVbbHuIWUHEauBv5qT4Av2tWasiTY1Jw6puUNqRJXQg=="
   "resolved" "https://registry.npmjs.org/nan/-/nan-2.14.0.tgz"
   "version" "2.14.0"
@@ -9581,6 +9581,7 @@
   "version" "2.0.3"
 
 "scrypt-shim@github:web3-js/scrypt-shim":
+  "resolved" "git+ssh://git@github.com/web3-js/scrypt-shim.git#aafdadda13e660e25e1c525d1f5b2443f5eb1ebb"
   "version" "0.1.0"
   dependencies:
     "scryptsy" "^2.1.0"
@@ -11365,11 +11366,12 @@
   "version" "0.1.4"
 
 "websocket@github:web3-js/WebSocket-Node#polyfill/globalThis":
+  "resolved" "git+ssh://git@github.com/web3-js/WebSocket-Node.git#ef5ea2f41daf4a2113b80c9223df884b4d56c400"
   "version" "1.0.29"
   dependencies:
     "debug" "^2.2.0"
-    "gulp" "^4.0.2"
-    "nan" "^2.11.0"
+    "es5-ext" "^0.10.50"
+    "nan" "^2.14.0"
     "typedarray-to-buffer" "^3.1.5"
     "yaeti" "^0.0.6"
 

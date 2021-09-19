@@ -2,6 +2,7 @@
   "dependencies": {
     "@devexpress/dx-react-core": "^2.7.6",
     "@devexpress/dx-react-grid": "^2.7.6",
+    "@openzeppelin/contracts": "^4.3.2",
     "bindings": "^1.5.0",
     "ipfs-mini": "^1.1.5",
     "mz": "^2.7.0",

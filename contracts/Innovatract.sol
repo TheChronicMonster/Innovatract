@@ -206,6 +206,14 @@ contract Innovatract{
     //     owner.transfer(stakeAmount * 1e18);
     // }
 
+    // function(GoalStatus _status) public getStatus() {}
+    
+    // function TimeLockController() public {
+        //    getStatus();
+        // check if time is passed
+            // call the contract if time exceeds the end date, cancel the contract, keep the stake
+            // if successful, return the stake to the owner
+
     /* Events */
 
     event ContractIssued(uint contract_id, address owner, uint amount, string data);

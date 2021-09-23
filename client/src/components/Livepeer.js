@@ -1,9 +1,9 @@
-import React from 'react'
+import React from 'react';
 
 const Livepeer = () => {
     return (
         <div>
-            
+            <button>Record Goal</button>
         </div>
     )
 }

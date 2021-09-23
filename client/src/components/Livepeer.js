@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import SECRETS from '../secrets.js';
 import axios from 'axios';
-import ShakaPlayer from 'shaka-player';
+import ShakaPlayer from 'shaka-player-react';
 
 const Livepeer = () => {
     const Livepeer = require("livepeer-nodejs");
@@ -72,7 +72,7 @@ const Livepeer = () => {
             <button onClick={startStream}>Record Goal</button>
             {data ? <p>stream key: {data.streamKey} server: rtmp://rtmp.livepeer.com/live (plug into streaming software)</p> : null}
             {showButton ? <button onClick={getStreamUrl}>Play Stream</button> : null}
-            {streamUrl ? <ShakaPlayer src={streamUrl} /> : null}
+            <ShakaPlayer src={streamUrl} />
         </div>
     );
 }

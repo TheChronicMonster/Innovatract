@@ -5,7 +5,7 @@ const Livepeer = () => {
     const Livepeer = require("livepeer-nodejs");
     const apiKey = SECRETS.api;
     const livepeerObject = new Livepeer(apiKey);
-    const [data, setData] = useState([]);
+    const [data, setData] = useState(null);
     const [streamUrl, setStreamUrl] = useState(null);
 
     const content = {
@@ -46,6 +46,7 @@ const Livepeer = () => {
     return (
         <div>
             <button onClick={startStream}>Record Goal</button>
+            {data ? <p>stream key: {data.streamKey}</p> : null}
         </div>
     )
 }

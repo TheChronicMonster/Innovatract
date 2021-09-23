@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import SECRETS from '../secrets.js';
 import axios from 'axios';
 import ShakaPlayer from 'shaka-player-react';
+import "shaka-player/dist/controls.css";
 
 const Livepeer = () => {
     const Livepeer = require("livepeer-nodejs");

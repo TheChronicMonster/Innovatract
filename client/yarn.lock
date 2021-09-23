@@ -1278,6 +1278,11 @@
   "resolved" "https://registry.npmjs.org/@types/eslint-visitor-keys/-/eslint-visitor-keys-1.0.0.tgz"
   "version" "1.0.0"
 
+"@types/estree@*":
+  "integrity" "sha512-C6N5s2ZFtuZRj54k2/zyRhNDjJwwcViAM3Nbm8zjBpbqAdZ00mr0CFxvSKeO8Y/e03WVFLpQMdHYVfUd6SB+Hw=="
+  "resolved" "https://registry.npmjs.org/@types/estree/-/estree-0.0.50.tgz"
+  "version" "0.0.50"
+
 "@types/invariant@^2.2.33":
   "integrity" "sha512-lYUtmJ9BqUN688fGY1U1HZoWT1/Jrmgigx2loq4ZcJpICECm/Om3V314BxdzypO0u5PORKGMM6x0OXaljV1YFg=="
   "resolved" "https://registry.npmjs.org/@types/invariant/-/invariant-2.2.34.tgz"
@@ -9463,6 +9468,15 @@
   dependencies:
     "bn.js" "^4.11.1"
 
+"rollup@^1.26.2":
+  "integrity" "sha512-/2HA0Ec70TvQnXdzynFffkjA6XN+1e2pEv/uKS5Ulca40g2L7KuOE3riasHoNVHOsFD5KKZgDsMk1CP3Tw9s+A=="
+  "resolved" "https://registry.npmjs.org/rollup/-/rollup-1.32.1.tgz"
+  "version" "1.32.1"
+  dependencies:
+    "@types/estree" "*"
+    "@types/node" "*"
+    "acorn" "^7.1.0"
+
 "rsvp@^4.8.4":
   "integrity" "sha512-nfMOlASu9OnRJo1mbEk2cz0D56a1MBNrJ7orjRZQG10XDyuvwksKbuXNp6qa+kbn839HwjwhBzhFmdsaEAfauA=="
   "resolved" "https://registry.npmjs.org/rsvp/-/rsvp-4.8.5.tgz"
@@ -9774,7 +9788,15 @@
     "inherits" "^2.0.1"
     "safe-buffer" "^5.0.1"
 
-"shaka-player@^3.2.0":
+"shaka-player-react@^1.1.2":
+  "integrity" "sha512-bvvRxIVTHh2GIBYa5/sfaBA1WgAe7FxUNcidvuzWgIwRJdzQ+q1ohd+TUtg3OMPlQnIglinZLFCA3bQ6pA0UuQ=="
+  "resolved" "https://registry.npmjs.org/shaka-player-react/-/shaka-player-react-1.1.2.tgz"
+  "version" "1.1.2"
+  dependencies:
+    "rollup" "^1.26.2"
+    "shaka-player" "^3.0.6"
+
+"shaka-player@^3.0.6", "shaka-player@^3.2.0":
   "integrity" "sha512-JwFYNB+jgXKIwukncYEnU3wqR/ScyxpPNkSVUgT4Qxt4uPOkEBwPuZr9cpeqBUMQi6lXpBVTztC76AooPOpZ5g=="
   "resolved" "https://registry.npmjs.org/shaka-player/-/shaka-player-3.2.0.tgz"
   "version" "3.2.0"

@@ -12,6 +12,7 @@
     "react-dom": "16.11.0",
     "react-scripts": "3.2.0",
     "shaka-player": "^3.2.0",
+    "shaka-player-react": "^1.1.2",
     "web3": "1.2.2"
   },
   "scripts": {

@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
+import SECRETS from '../secrets.js';
 
 const Livepeer = () => {
     const Livepeer = require("livepeer-nodejs");
-    const apiKey = process.env.REACT_APP_API_KEY;
+    const apiKey = SECRETS.api;
     const livepeerObject = new Livepeer(apiKey);
     const [data, setData] = useState([]);
     const [streamUrl, setStreamUrl] = useState(null);
@@ -34,16 +35,12 @@ const Livepeer = () => {
         ],
         "record": true
     };
-    
+
     const startStream = () => {
         livepeerObject.Stream.create(content).then((res) => {
             setData(res);
         });
     };
-
-    useEffect(() => {
-        startStream();
-    }, []);
 
     return (
         <div>

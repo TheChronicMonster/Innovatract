@@ -38,13 +38,14 @@ const Livepeer = () => {
 
     const startStream = () => {
         livepeerObject.Stream.create(content).then((res) => {
+            console.log(res);
             setData(res);
         });
     };
 
     return (
         <div>
-            <button>Record Goal</button>
+            <button onClick={startStream}>Record Goal</button>
         </div>
     )
 }

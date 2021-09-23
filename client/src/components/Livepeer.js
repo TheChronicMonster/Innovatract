@@ -71,7 +71,7 @@ const Livepeer = () => {
         <div>
             <button onClick={startStream}>Record Goal</button>
             {data ? <p>stream key: {data.streamKey} (plug into streaming sofrware)</p> : null}
-            {showButton ? <button>Play Stream</button> : null}
+            {showButton ? <button onClick={getStreamUrl}>Play Stream</button> : null}
             {streamUrl ? <ShakaPlayer src={streamUrl} /> : null}
         </div>
     );

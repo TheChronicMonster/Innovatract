@@ -48,7 +48,7 @@ const Livepeer = () => {
             <button onClick={startStream}>Record Goal</button>
             {data ? <p>stream key: {data.streamKey}</p> : null}
         </div>
-    )
+    );
 }
 
 export default Livepeer;

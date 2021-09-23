@@ -210,6 +210,8 @@ class App extends Component {
             </Card>
           </Row>
         </Container>
+        <br />
+        <Livepeer />
       </div>
     );
   }

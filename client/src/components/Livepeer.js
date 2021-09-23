@@ -73,7 +73,7 @@ const Livepeer = () => {
             <button onClick={startStream}>Record Goal</button>
             {data ? <p>stream key: {data.streamKey} server: rtmp://rtmp.livepeer.com/live (plug into streaming software)</p> : null}
             {showButton ? <button onClick={getStreamUrl}>Play Stream</button> : null}
-            <ShakaPlayer src={streamUrl} />
+            {streamUrl != "" && streamUrl != null ? <ShakaPlayer src={streamUrl} /> : null}
         </div>
     );
 }

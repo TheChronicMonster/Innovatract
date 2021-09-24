@@ -4,9 +4,7 @@ A smart contract that enables users to enter binding contracts with themselves
 ### Run Instructions
 
 To use the front-end application, [clone the repository](https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/cloning-a-repository-from-github/cloning-a-repository)
-`cd Innovatract`
-`npm install`
-`cd client && npm run start`
+`cd Innovatract && ./run.sh`
 
 This will open the front-end user interface on `localhost://3000`
 Navigate to `localhost://3000/scr/index.html` to view the DApp.
@@ -33,4 +31,4 @@ The Solidity smart contract operates on the Polygon/Matic Blockchain and was a d
 
 We stand on the shoulders of giants. Guidance and help were sourced from GlobalETH, Fluence Labs, Polygon/matic documentation, and kauri.io. Stack Overflow and countless blogs were also consulted in the making of this DApp. This service exists thanks to the knowledge that countless engineers have shared and published. This is our offering as a way to support and give back to communities that have shared so much.
 
-Created by JP Miller, David Pius, Ilya Kostin, and research performed by Azim Anuar
+Created by [JP Miller](https://github.com/TheChronicMonster), [David Pius](https://github.com/davidpius95), [Ilya Kostin](https://github.com/IlyaKIS1), and research performed by [Azim Anuar](https://github.com/azimanuar5874)

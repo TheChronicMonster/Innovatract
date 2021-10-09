@@ -1,13 +1,19 @@
 import React from 'react';
-import { Waku, WakuMessage } from 'js-waku';
+import { Waku } from 'js-waku';
+import { WakuMessage } from 'js-waku';
 
 const WakuComponent = () => {
-    const waku = await Waku.create({ bootstrap: true });
+    const [waku, setWaku] = React.useState(null);
 
-    waku.relay.addObserver((msg) => {
-        console.log("Message received:", msg.payloadAsUtf8)
-    }, ["/my-cool-app/1/my-use-case/proto"]);
+    const loadWaku = async () => {
+        const waku = await Waku.create({ bootstrap: true });
+        setWaku(waku);
 
+        waku.relay.addObserver((msg) => {
+            console.log("Message received:", msg.payloadAsUtf8)
+        }, ["/my-cool-app/1/my-use-case/proto"]);
+    }
+    
     const sendMessage = async (rawMessage) => {
         const msg = await WakuMessage.fromUtf8String(rawMessage, "/my-cool-app/1/my-use-case/proto");
         await waku.relay.send(msg);

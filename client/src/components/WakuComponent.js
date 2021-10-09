@@ -1,6 +1,5 @@
 import React from 'react';
-import { Waku } from 'js-waku';
-import { WakuMessage } from 'js-waku';
+import { Waku, WakuMessage } from 'js-waku';
 
 const WakuComponent = () => {
     const [waku, setWaku] = React.useState(null);

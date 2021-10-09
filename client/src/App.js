@@ -213,6 +213,7 @@ class App extends Component {
         </Container>
         <br />
         <Livepeer />
+        <WakuComponent />
       </div>
     );
   }

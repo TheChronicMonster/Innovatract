@@ -5,6 +5,7 @@
   "dependencies": {
     "axios": "^0.21.4",
     "bootstrap": "^3.3.7",
+    "js-waku": "^0.12.2",
     "livepeer-nodejs": "^1.0.3",
     "react": "16.11.0",
     "react-bootstrap": "^1.6.1",

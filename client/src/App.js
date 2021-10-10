@@ -3,7 +3,7 @@ import InnovatractContract from "./contracts/Innovatract.json";
 import getWeb3 from "./getWeb3";
 import { setJSON, getJSON } from './utils/IPFS.js'
 import Livepeer from './components/Livepeer.js';
-import WakuComponent from './components/WakuComponent.js';
+// import WakuComponent from './components/WakuComponent.js';
 
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";

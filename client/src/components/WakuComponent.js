@@ -32,4 +32,4 @@ const WakuComponent = () => {
     )
 }
 
-// export default WakuComponent;
+export default WakuComponent;
